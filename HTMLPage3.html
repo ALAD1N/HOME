@@ -1,0 +1,757 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Тачко-Казик</title>
+    <style>
+       * { 
+    margin: 0; 
+    padding: 0; 
+    box-sizing: border-box; 
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    color: white;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.game-container {
+    background: #16213e;
+    border-radius: 20px;
+    padding: 20px;
+    max-width: 500px;
+    width: 100%;
+    text-align: center;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+}
+
+/* ПРОФИЛЬ */
+.profile {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #0f3460;
+    border-radius: 15px;
+    padding: 15px;
+    margin-bottom: 20px;
+}
+
+.profile-info {
+    text-align: left;
+}
+
+.profile-name {
+    font-size: 18px;
+    font-weight: bold;
+    color: #e94560;
+}
+
+.profile-level {
+    font-size: 14px;
+    color: #ffd700;
+}
+
+/* БАЛАНС */
+.balance {
+    font-size: 24px;
+    margin: 20px 0;
+    color: #ffd700;
+    text-shadow: 0 0 10px rgba(255,215,0,0.3);
+}
+
+/* ВКЛАДКИ */
+.tabs {
+    display: flex;
+    gap: 10px;
+    margin: 20px 0;
+}
+
+.tab-btn {
+    flex: 1;
+    padding: 10px;
+    background: #0f3460;
+    border-radius: 10px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s;
+    border: 2px solid transparent;
+    color: white;
+}
+
+.tab-btn.active { 
+    background: #e94560;
+    border-color: #ff6b6b;
+}
+
+/* СЕКЦИИ */
+.slot-machine, .cases, .garage-section {
+    background: #0f3460;
+    border-radius: 15px;
+    padding: 20px;
+    margin: 20px 0;
+}
+
+/* РУЛЕТКА */
+.reels {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin: 20px 0;
+    font-size: 50px;
+}
+
+.reel {
+    background: linear-gradient(145deg, #ffffff, #e6e6e6);
+    border-radius: 15px;
+    width: 90px;
+    height: 90px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #333;
+    font-size: 50px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    transition: all 0.3s;
+}
+
+/* КНОПКИ */
+button {
+    background: #e94560;
+    color: white;
+    border: none;
+    padding: 15px 40px;
+    border-radius: 25px;
+    font-size: 18px;
+    cursor: pointer;
+    margin: 10px;
+    width: calc(100% - 20px);
+    max-width: 300px;
+    transition: all 0.3s;
+    font-weight: bold;
+}
+
+button:hover { 
+    background: #c73b54; 
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(233,69,96,0.4);
+}
+
+button:active { 
+    transform: scale(0.95); 
+}
+
+.case-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    margin: 10px 0;
+}
+
+.case-btn:hover {
+    background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+}
+
+.sell-btn {
+    background: #00b894;
+    color: white;
+    font-size: 12px;
+    padding: 5px 15px;
+    margin: 5px;
+    width: auto;
+}
+
+.sell-btn:hover { 
+    background: #00a381; 
+}
+
+.reset-btn {
+    background: #636e72;
+    font-size: 12px;
+    padding: 10px 20px;
+    width: auto;
+}
+
+.reset-btn:hover { 
+    background: #2d3436; 
+}
+
+/* ГАРАЖ */
+.car-shop {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin: 20px 0;
+}
+
+.car-card {
+    background: #1a1a4e;
+    padding: 15px;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: all 0.3s;
+    border: 2px solid transparent;
+}
+
+.car-card:hover { 
+    background: #1a4080;
+    border-color: #e94560;
+}
+
+.car-emoji { 
+    font-size: 45px;
+    margin: 10px 0;
+    min-height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.car-emoji img {
+    max-width: 100%;
+    max-height: 80px;
+    object-fit: contain;
+}
+
+.car-name {
+    font-weight: bold;
+    font-size: 16px;
+    margin: 5px 0;
+}
+
+.car-rarity {
+    font-size: 12px;
+    padding: 3px 8px;
+    border-radius: 10px;
+    display: inline-block;
+    margin: 5px 0;
+    color: white;
+}
+
+.rarity-common { background: #808080; }
+.rarity-uncommon { background: #00b894; }
+.rarity-rare { background: #0984e3; }
+.rarity-legendary { background: #e17055; }
+.rarity-mythical { background: #a29bfe; }
+.rarity-VIP { background: #ffd700; }
+
+.price {
+    color: #ffd700;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+/* УВЕДОМЛЕНИЯ */
+.notification {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #e94560;
+    color: white;
+    padding: 15px 30px;
+    border-radius: 10px;
+    z-index: 1000;
+    display: none;
+    animation: slideDown 0.3s;
+    font-weight: bold;
+}
+
+/* РЕЗУЛЬТАТ КЕЙСА */
+#case-result {
+    margin-top: 20px;
+    padding: 15px;
+    background: rgba(0,0,0,0.3);
+    border-radius: 10px;
+    min-height: 50px;
+}
+
+/* ПОЛЕ ВВОДА СТАВКИ */
+.bet-input {
+    padding: 12px; 
+    border-radius: 10px; 
+    border: 2px solid #e94560; 
+    background: #0f3460; 
+    color: white; 
+    font-size: 18px; 
+    width: 150px; 
+    text-align: center;
+    outline: none;
+}
+
+.bet-input:focus {
+    border-color: #ffd700;
+    box-shadow: 0 0 10px rgba(255,215,0,0.3);
+}
+
+.quick-bet-btn {
+    width: auto !important;
+    padding: 8px 12px !important;
+    font-size: 13px !important;
+    margin: 3px !important;
+    background: #0f3460;
+    border: 1px solid #e94560;
+}
+
+.quick-bet-btn:hover {
+    background: #e94560;
+}
+
+.spin-btn {
+    background: linear-gradient(135deg, #f39c12, #e74c3c);
+    font-size: 22px;
+    padding: 18px;
+    margin-top: 15px;
+    animation: glow 2s infinite;
+}
+
+@keyframes glow {
+    0%, 100% { box-shadow: 0 0 5px rgba(231,76,60,0.5); }
+    50% { box-shadow: 0 0 20px rgba(231,76,60,0.8); }
+}
+
+/* АНИМАЦИИ */
+@keyframes slideDown {
+    from { 
+        transform: translateX(-50%) translateY(-100px); 
+        opacity: 0; 
+    }
+    to { 
+        transform: translateX(-50%) translateY(0); 
+        opacity: 1; 
+    }
+}
+
+.win-animation {
+    animation: winPulse 0.5s;
+}
+
+@keyframes winPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <h1>🚗 Тачко-Казик</h1>
+        
+        <div class="profile">
+            <div class="profile-info">
+                <div class="profile-name" id="profileName">Игрок</div>
+                <div class="profile-level" id="profileLevel">Уровень: 1</div>
+                <div style="font-size: 12px; color: #aaa;" id="totalEarned">Всего заработано: 0 💰</div>
+            </div>
+            <button class="reset-btn" onclick="resetProfile()">🔄 Сброс</button>
+        </div>
+        
+        <div class="balance" id="balance">Баланс: 1000 💰</div>
+        
+        <div class="tabs">
+            <button class="tab-btn active" onclick="showTab('slots')">🎰 Рулетка</button>
+            <button class="tab-btn" onclick="showTab('cases')">📦 Кейсы</button>
+            <button class="tab-btn" onclick="showTab('garage')">🏪 Гараж</button>
+        </div>
+        
+        <!-- РУЛЕТКА -->
+        <div id="slots-tab" class="slot-machine">
+            <div class="reels">
+                <div class="reel" id="reel1">🍒</div>
+                <div class="reel" id="reel2">🍋</div>
+                <div class="reel" id="reel3">🍊</div>
+            </div>
+            
+            <div style="margin: 15px 0;">
+                <input type="number" 
+                       id="betInput" 
+                       class="bet-input"
+                       placeholder="Ставка" 
+                       min="50" 
+                       max="10000" 
+                       value="50">
+                <span style="color: #ffd700; font-size: 18px;">💰</span>
+            </div>
+            
+            <div style="display: flex; gap: 5px; justify-content: center; flex-wrap: wrap; margin: 10px 0;">
+                <button class="quick-bet-btn" onclick="setBet(50)">50</button>
+                <button class="quick-bet-btn" onclick="setBet(100)">100</button>
+                <button class="quick-bet-btn" onclick="setBet(500)">500</button>
+                <button class="quick-bet-btn" onclick="setBet(1000)">1K</button>
+                <button class="quick-bet-btn" onclick="setBet(5000)">5K</button>
+                <button class="quick-bet-btn" onclick="setBet(10000)">10K</button>
+            </div>
+            
+            <button class="spin-btn" onclick="spinWithCustomBet()">🎰 КРУТИТЬ!</button>
+            <div id="slots-result"></div>
+        </div>
+        
+        <!-- КЕЙСЫ -->
+        <div id="cases-tab" style="display:none;">
+            <div class="cases">
+                <h3>📦 Кейсы с тачками</h3>
+                <button class="case-btn" onclick="openCase('common')">
+                    🔑 Базовый кейс (500💰)
+                    <br><small>Обычные и редкие тачки</small>
+                </button>
+                <button class="case-btn" onclick="openCase('premium')">
+                    🗝️ Премиум кейс (2000💰)
+                    <br><small>Редкие и легендарные тачки</small>
+                </button>
+                <button class="case-btn" onclick="openCase('mythical')">
+                    💎 Мифический кейс (5000💰)
+                    <br><small>Шанс на мифическую тачку!</small>
+                </button>
+                <div id="case-result"></div>
+            </div>
+        </div>
+        
+        <!-- ГАРАЖ -->
+        <div id="garage-tab" style="display:none;">
+            <div class="garage-section">
+                <h3>🏪 Твой гараж (<span id="carCount">0</span> тачек)</h3>
+                <div class="car-shop" id="garage"></div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="notification" id="notification"></div>
+
+    <script>
+        // ===== ДАННЫЕ ИГРЫ =====
+        const cars = {
+            '🚲': { name: 'Велик', price: 100, rarity: 'common', img: '🚲' },
+            '🛵': { name: 'Скутер', price: 250, rarity: 'common', img: '🛵' },
+            '🚗': { name: 'Лада Гранта', price: 500, rarity: 'common', img: 'https://avatars.mds.yandex.net/get-autoru-vos/15256414/a423d6264490916b8c197655750c5043/1200x900'},
+            '🚙': { name: 'Нива Петровича', price: 800, rarity: 'uncommon', img: 'https://a.d-cd.net/GGfCD-F2LRxA3U_MxvO6WBKV2yA-1920.jpg' },
+            '🚐': { name: 'Буханка', price: 1200, rarity: 'uncommon', img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a1/UAZ-Bus.jpg/960px-UAZ-Bus.jpg' },
+            '🏎️': { name: 'Ferrari F40', price: 2500, rarity: 'rare', img: 'https://i.ytimg.com/vi/oyenRkzVyak/maxresdefault.jpg' },
+            '🚁': { name: 'Вертолёт', price: 4000, rarity: 'rare', img: 'https://avatars.mds.yandex.net/i?id=9f1a67a09de93f3cdae4b76376a098dd_l-3738263-images-thumbs&n=13' },
+            '🏍️': { name: 'Ducati Panigale', price: 3500, rarity: 'rare', img: 'https://avatars.mds.yandex.net/get-autoru-vos/5086608/41e8cfe31885a3124c3b7866e4adbda7/1200x900' },
+            '🚀': { name: 'Bugatti Chiron', price: 8000, rarity: 'legendary', img: 'https://i.pinimg.com/736x/79/c0/51/79c051ad308ba757c76fcba1367c8ac1.jpg' },
+            '🛸': { name: 'Lamborghini Aventador', price: 15000, rarity: 'legendary', img: 'https://avatars.mds.yandex.net/get-autoru-vos/18375018/19f20f5c264d3a655fab7c0b53b4567f/1200x900' },
+            '🐉': { name: 'Кибертрак', price: 25000, rarity: 'mythical', img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/2024_Tesla_Cybertruck_Foundation_Series%2C_front_left_%28Greenwich%29.jpg/1280px-2024_Tesla_Cybertruck_Foundation_Series%2C_front_left_%28Greenwich%29.jpg' },
+            '👑': { name: 'Rolls-Royce Phantom', price: 50000, rarity: 'VIP', img: 'https://avatars.mds.yandex.net/get-autoru-reviews/11380780/ae71b7dcf99f29c73568e8af087ed048/1200x900' }
+        };
+        
+        // ===== СОСТОЯНИЕ ИГРЫ =====
+        let gameState = {
+            balance: 1000,
+            garage: ['🚲'],
+            profileName: 'Игрок',
+            level: 1,
+            totalEarned: 0,
+            spinsCount: 0,
+            casesOpened: 0
+        };
+        
+        // ===== ЗАГРУЗКА ИЗ LOCALSTORAGE =====
+        function loadGame() {
+            const savedData = localStorage.getItem('tachkoCasikSave');
+            if (savedData) {
+                try {
+                    const parsed = JSON.parse(savedData);
+                    gameState = { ...gameState, ...parsed };
+                    console.log('✅ Прогресс загружен!');
+                } catch (e) {
+                    console.log('❌ Ошибка загрузки, создаём новый профиль');
+                    saveGame();
+                }
+            } else {
+                saveGame(); // Первый запуск
+            }
+        }
+        
+        // ===== СОХРАНЕНИЕ В LOCALSTORAGE =====
+        function saveGame() {
+            localStorage.setItem('tachkoCasikSave', JSON.stringify(gameState));
+        }
+        
+        // ===== УВЕДОМЛЕНИЯ =====
+        function showNotification(text, type = 'info') {
+            const notif = document.getElementById('notification');
+            notif.textContent = text;
+            notif.style.display = 'block';
+            notif.style.background = type === 'win' ? '#00b894' : '#e94560';
+            
+            setTimeout(() => {
+                notif.style.display = 'none';
+            }, 2000);
+        }
+        
+        // ===== УСТАНОВКА СТАВКИ =====
+        function setBet(amount) {
+            document.getElementById('betInput').value = amount;
+        }
+        
+        // ===== КРУТИТЬ С КАСТОМНОЙ СТАВКОЙ =====
+        function spinWithCustomBet() {
+            const betInput = document.getElementById('betInput');
+            let bet = parseInt(betInput.value);
+            
+            if (isNaN(bet) || bet < 50) {
+                showNotification('Минимальная ставка: 50💰', 'error');
+                betInput.value = 50;
+                return;
+            }
+            
+            if (bet > gameState.balance) {
+                showNotification('Недостаточно денег! 💸', 'error');
+                return;
+            }
+            
+            if (bet > 100000) {
+                showNotification('Максимальная ставка: 100000💰', 'error');
+                betInput.value = 10000;
+                return;
+            }
+            
+            spinSlots(bet);
+        }
+        
+        // ===== РУЛЕТКА =====
+        function spinSlots(bet = 50) {
+            if (gameState.balance < bet) {
+                showNotification('Недостаточно денег! 💸', 'error');
+                return;
+            }
+            
+            gameState.balance -= bet;
+            gameState.spinsCount++;
+            
+            const emojis = ['🍒', '🍋', '🍊', '💎', '7️⃣', '🚗', '⭐', '🔔'];
+            const r1 = emojis[Math.floor(Math.random() * emojis.length)];
+            const r2 = emojis[Math.floor(Math.random() * emojis.length)];
+            const r3 = emojis[Math.floor(Math.random() * emojis.length)];
+            
+            // Анимация кручения
+            const reels = ['reel1', 'reel2', 'reel3'];
+            reels.forEach(id => {
+                document.getElementById(id).style.transform = 'rotateY(360deg)';
+            });
+            
+            setTimeout(() => {
+    document.getElementById('reel1').textContent = r1;
+    document.getElementById('reel2').textContent = r2;
+    document.getElementById('reel3').textContent = r3;
+    
+    let winAmount = 0;
+    let message = '';
+    
+    if (r1 === r2 && r2 === r3) {
+        winAmount = bet * 10;
+        message = '🎉 ДЖЕКПОТ!';
+        document.querySelector('.slot-machine').classList.add('win-animation');
+        setTimeout(() => document.querySelector('.slot-machine').classList.remove('win-animation'), 500);
+    } else if (r1 === r2 || r2 === r3 || r1 === r3) {
+        winAmount = bet * 3;
+        message = '✨ Пара!';
+    } else {
+        message = '😔 Не повезло...';
+    }
+    
+    if (winAmount > 0) {
+        gameState.balance += winAmount;
+        gameState.totalEarned += winAmount;
+        showNotification(`${message} +${winAmount}💰`, 'win');
+        document.getElementById('slots-result').innerHTML = `<span style="color: #00b894;">${message} +${winAmount}💰</span>`;
+    } else {
+        showNotification(message);
+        document.getElementById('slots-result').innerHTML = `<span style="color: #e94560;">${message}</span>`;
+    }
+    
+    updateDisplay();
+    saveGame();
+    checkLevelUp();
+}, 300);
+        }
+        
+        // ===== КЕЙСЫ =====
+        function openCase(tier) {
+            const costs = { common: 500, premium: 2000, mythical: 5000 };
+            const cost = costs[tier];
+            
+            if (gameState.balance < cost) {
+                showNotification('Недостаточно денег! 💸', 'error');
+                return;
+            }
+            
+            gameState.balance -= cost;
+            gameState.casesOpened++;
+            
+            const dropChances = {
+                common: [
+                    { car: '🚲', chance: 30 },
+                    { car: '🛵', chance: 25 },
+                    { car: '🚗', chance: 20 },
+                    { car: '🚙', chance: 15 },
+                    { car: '🚐', chance: 8 },
+                    { car: '🏎️', chance: 2 }
+                ],
+                premium: [
+                    { car: '🚙', chance: 25 },
+                    { car: '🚐', chance: 20 },
+                    { car: '🏎️', chance: 25 },
+                    { car: '🚁', chance: 15 },
+                    { car: '🏍️', chance: 10 },
+                    { car: '🚀', chance: 5 }
+                ],
+                mythical: [
+                    { car: '🏎️', chance: 20 },
+                    { car: '🚁', chance: 20 },
+                    { car: '🏍️', chance: 20 },
+                    { car: '🚀', chance: 20 },
+                    { car: '🛸', chance: 15 },
+                    { car: '🐉', chance: 4 },
+                    { car: '👑', chance: 1 }
+                ]
+            };
+            
+            const drops = dropChances[tier];
+            const totalChance = drops.reduce((sum, d) => sum + d.chance, 0);
+            let random = Math.random() * totalChance;
+            let selectedCar = drops[0];
+            
+            for (let drop of drops) {
+                random -= drop.chance;
+                if (random <= 0) {
+                    selectedCar = drop;
+                    break;
+                }
+            }
+            
+            gameState.garage.push(selectedCar.car);
+            
+            const carInfo = cars[selectedCar.car];
+            document.getElementById('case-result').innerHTML = 
+                `<div style="animation: winPulse 0.5s;">
+                    <div style="font-size: 60px;">${selectedCar.car}</div>
+                    <div style="font-size: 20px; font-weight: bold;">${carInfo.name}</div>
+                    <div class="car-rarity rarity-${carInfo.rarity}">${carInfo.rarity.toUpperCase()}</div>
+                    <div class="price">Стоимость: ${carInfo.price} 💰</div>
+                </div>`;
+            
+            if (carInfo.rarity === 'legendary' || carInfo.rarity === 'mythical' || carInfo.rarity === 'VIP') {
+                showNotification(`🎉 ЛЕГЕНДАРНО! Выбил ${carInfo.name}!`, 'win');
+            }
+            
+            updateDisplay();
+            saveGame();
+            checkLevelUp();
+        }
+        
+        // ===== ПРОДАЖА ТАЧЕК =====
+        function sellCar(car) {
+            const index = gameState.garage.indexOf(car);
+            if (index > -1 && gameState.garage.length > 1) {
+                const carInfo = cars[car];
+                const sellPrice = Math.floor(carInfo.price * (0.5 + Math.random() * 0.3));
+                
+                gameState.garage.splice(index, 1);
+                gameState.balance += sellPrice;
+                
+                showNotification(`Продано ${carInfo.name} за ${sellPrice}💰`, 'win');
+                updateDisplay();
+                saveGame();
+            } else {
+                showNotification('Нельзя продать последнюю тачку! 🚫');
+            }
+        }
+        
+        // ===== СИСТЕМА УРОВНЕЙ =====
+        function checkLevelUp() {
+            const newLevel = Math.floor(gameState.totalEarned / 1000) + 1;
+            if (newLevel > gameState.level) {
+                gameState.level = newLevel;
+                gameState.balance += 200;
+                showNotification(`🎊 Уровень ${newLevel}! Бонус +200💰`, 'win');
+                saveGame();
+            }
+        }
+        
+        // ===== ОБНОВЛЕНИЕ ИНТЕРФЕЙСА =====
+        function updateDisplay() {
+            document.getElementById('balance').textContent = `Баланс: ${gameState.balance} 💰`;
+            document.getElementById('profileName').textContent = gameState.profileName;
+            document.getElementById('profileLevel').textContent = `Уровень: ${gameState.level}`;
+            document.getElementById('totalEarned').textContent = 
+                `Всего заработано: ${gameState.totalEarned} 💰`;
+            
+            if (document.getElementById('garage-tab').style.display !== 'none') {
+                updateGarage();
+            }
+        }
+        
+        function updateGarage() {
+            const garageDiv = document.getElementById('garage');
+            document.getElementById('carCount').textContent = gameState.garage.length;
+            
+            garageDiv.innerHTML = gameState.garage.map(car => {
+                const carInfo = cars[car];
+                const carImage = carInfo.img.startsWith('http') 
+                  ? `<img src="${carInfo.img}" alt="${carInfo.name}" style="max-width:100%;height:70px;">` 
+                  : `<span style="font-size:50px;">${carInfo.img}</span>`;
+    
+                return `
+                    <div class="car-card">
+                        <div class="car-emoji">${carImage}</div>
+                        <div class="car-name">${carInfo.name}</div>
+                        <div class="car-rarity rarity-${carInfo.rarity}">${carInfo.rarity}</div>
+                        <div class="price">💰 ${carInfo.price}</div>
+                        <button class="sell-btn" onclick="sellCar('${car}')">💸 Продать</button>
+                    </div>
+                `;
+            }).join('');
+            
+            if (gameState.garage.length === 0) {
+                garageDiv.innerHTML = '<p style="color: #aaa;">Гараж пуст 🥺<br>Открой кейсы!</p>';
+            }
+        }
+        
+        // ===== СБРОС ПРОФИЛЯ =====
+        function resetProfile() {
+            if (confirm('Точно сбросить ВЕСЬ прогресс? Это нельзя отменить!')) {
+                gameState = {
+                    balance: 1000,
+                    garage: ['🚲'],
+                    profileName: 'Игрок',
+                    level: 1,
+                    totalEarned: 0,
+                    spinsCount: 0,
+                    casesOpened: 0
+                };
+                saveGame();
+                updateDisplay();
+                showNotification('Прогресс сброшен 🔄');
+            }
+        }
+        
+        // ===== ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК =====
+        function showTab(tab) {
+            document.getElementById('slots-tab').style.display = tab === 'slots' ? 'block' : 'none';
+            document.getElementById('cases-tab').style.display = tab === 'cases' ? 'block' : 'none';
+            document.getElementById('garage-tab').style.display = tab === 'garage' ? 'block' : 'none';
+            
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            if (tab === 'garage') updateGarage();
+        }
+        
+        // ===== ИНИЦИАЛИЗАЦИЯ =====
+        loadGame();
+        updateDisplay();
+        
+        setInterval(saveGame, 30000);
+        
+        console.log('🎮 Игра готова!');
+        console.log('💾 Сохранение в localStorage');
+        console.log('📱 Адаптировано под телефоны');
+        console.log('💰 Баланс:', gameState.balance);
+        console.log('🚗 Гараж:', gameState.garage.length, 'тачек');
+    </script>
+</body>
+</html>
